@@ -81,8 +81,8 @@ Verify your Node version:
 
 Clone the repository:
 
-`git clone https://github.com/your-org/reactive-minds.git
-cd reactive-minds`
+`git clone https://github.com/JaxsonMansouriRF/reactology.git
+cd reactology`
 
 Install dependencies:
 
