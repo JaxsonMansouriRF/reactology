@@ -90,9 +90,9 @@ Install dependencies:
 
 Start the development server:
 
-`npm start`
+`npm run dev`
 
-Open your browser and navigate to `http://localhost:3000` to see the app running.
+Open your browser and navigate to `http://localhost:5173` to see the app running.
 
 * * * * *
 
