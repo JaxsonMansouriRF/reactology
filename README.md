@@ -81,8 +81,11 @@ Verify your Node version:
 
 Clone the repository:
 
-`git clone https://github.com/JaxsonMansouriRF/reactology.git
-cd reactology`
+`git clone https://github.com/JaxsonMansouriRF/reactology.git`
+
+Then navigate into the project directory:
+
+`cd reactology`
 
 Install dependencies:
 
