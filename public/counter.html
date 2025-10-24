@@ -1,0 +1,29 @@
+<!-- public/counter.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vanilla JS Counter</title>
+  <style>
+    .card { padding: 2em; }
+    button { font-size: 1em; }
+  </style>
+</head>
+<body>
+<h1>Vanilla JS Counter</h1>
+<div class="card">
+  <button id="counterBtn">count is 0</button>
+  <p>
+    Edit <code>public/counter.html</code> and reload to see changes
+  </p>
+</div>
+<script>
+  let count = 0;
+  const btn = document.getElementById('counterBtn');
+  btn.addEventListener('click', () => {
+    count++;
+    btn.textContent = `count is ${count}`;
+  });
+</script>
+</body>
+</html>
