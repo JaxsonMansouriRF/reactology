@@ -81,8 +81,11 @@ Verify your Node version:
 
 Clone the repository:
 
-`git clone https://github.com/your-org/reactive-minds.git
-cd reactive-minds`
+`git clone https://github.com/JaxsonMansouriRF/reactology.git`
+
+Then navigate into the project directory:
+
+`cd reactology`
 
 Install dependencies:
 
@@ -90,9 +93,9 @@ Install dependencies:
 
 Start the development server:
 
-`npm start`
+`npm run dev`
 
-Open your browser and navigate to `http://localhost:3000` to see the app running.
+Open your browser and navigate to `http://localhost:5173` to see the app running.
 
 * * * * *
 
