@@ -6,10 +6,13 @@ import LightSwitch from "../components/Misc/LightSwitch.jsx";
 const Dashboard= () => {
   return (
       <div>
-        <h1>Dashboard</h1>
+        <LightSwitch />
+        <EventList />
       </div>
   )
 }
+
+
 
 // Function declaration component
 // function Dashboard() {
@@ -19,8 +22,8 @@ const Dashboard= () => {
 //       </div>
 //   )
 // }
-//
-// Class component extending React.Component
+// //
+// // Class component extending React.Component
 // class Dashboard extends React.Component {
 //   render() {
 //     return (
@@ -30,8 +33,8 @@ const Dashboard= () => {
 //     )
 //   }
 // }
-//
-// Class component extending Component
+// //
+// // Class component extending Component
 // class Dashboard extends Component {
 //   render() {
 //     return (

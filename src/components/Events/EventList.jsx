@@ -1,27 +1,34 @@
-import React from 'react';
-import { Card, CardContent, Typography, Grid } from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import { Grid } from '@mui/material';
 import { MOCKED_EVENT_DATA } from '../../utils/MockedEventData';
+import EventCard from "./EventCard.jsx";
 
 const EventList= () => {
+  const [myName, setMyName ] = useState('');
+  const [eventsData, setEventsData ] = useState([]);
+
+  const fetchEventsData = () => {
+    // Successful response
+    setEventsData(MOCKED_EVENT_DATA);
+  }
+
+  useEffect(() => {
+    fetchEventsData()
+  }, []);
+
   return (
       <Grid container spacing={3}>
-        {MOCKED_EVENT_DATA.map(event => (
-            <Grid size={4} key={event.id}>
-              <Card sx={{ height: 200 }}>
-                <CardContent>
-                  <Typography variant="h6">{event.name}</Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    {event.date} &mdash; {event.location}
-                  </Typography>
-                  <Typography variant="body1" sx={{ mt: 1 }}>
-                    {event.description}
-                  </Typography>
-                  <Typography variant="caption" color={event.rsvp ? 'primary' : 'textSecondary'}>
-                    RSVP: {event.rsvp ? 'Yes' : 'No'}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
+        {eventsData.map(event => (
+            <EventCard
+              id={event.id}
+              name={event.name}
+              date={event.date}
+              location={event.location}
+              description={event.description}
+              rsvp={event.rsvp}
+              myName={myName}
+              setMyName={setMyName}
+            />
         ))}
       </Grid>
   );

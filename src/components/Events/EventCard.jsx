@@ -3,23 +3,31 @@
 // 2. Passed from parent → child – data flows one-way in React.
 // 3. Can be any type – strings, numbers, booleans, objects, functions, even other components.
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Card, CardContent, Grid, Typography} from "@mui/material";
 
-const EventCard = (props) => {
+const EventCard = ({ id, name, rsvp, date, location, description, myName, setMyName}) => {
+
+
+  useEffect(() => {
+    setMyName("jaxson")
+  }, [])
+
   return (
-      <Grid size={4} key={props.id}>
+      <Grid size={4} key={id}>
         <Card sx={{ height: 200 }}>
           <CardContent>
-            <Typography variant="h6">{props.name}</Typography>
+            <Typography variant="h6">My Name - {myName}</Typography>
+
+            <Typography variant="h6">{name}</Typography>
             <Typography variant="body2" color="textSecondary">
-              {props.date} &mdash; {props.location}
+              {date} &mdash; {location}
             </Typography>
             <Typography variant="body1" sx={{ mt: 1 }}>
-              {props.description}
+              {description}
             </Typography>
-            <Typography variant="caption" color={props.rsvp ? 'primary' : 'textSecondary'}>
-              RSVP: {props.rsvp ? 'Yes' : 'No'}
+            <Typography variant="caption" color={rsvp ? 'primary' : 'textSecondary'}>
+              RSVP: {rsvp ? 'Yes' : 'No'}
             </Typography>
           </CardContent>
         </Card>

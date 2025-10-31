@@ -8,13 +8,14 @@
 import React, { useState } from 'react';
 
 const LightSwitch = () => {
-  const [isOn, setIsOn ] = useState(false); //STATE
+  // const [isOn, setIsOn ] = useState(false); //STATE
+  let isOn = false; //NOT STATE
 
   // What if I do isOn = !isOn?
 
   return (
       // react onClick event handler
-      <button onClick={() => setIsOn(!isOn)}>
+      <button onClick={() => isOn = !isOn}>
         {/*Conditional rendering*/}
         {isOn ? '💡 The light is ON' : '💡 The light is OFF'}
       </button>
