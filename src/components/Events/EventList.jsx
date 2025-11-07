@@ -1,20 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Grid } from '@mui/material';
-import { MOCKED_EVENT_DATA } from '../../utils/MockedEventData';
 import EventCard from './EventCard.jsx';
 
-const EventList = () => {
-  const [eventsData, setEventsData] = useState([]);
-
-  const fetchEventsData = () => {
-    // Successful response
-    setEventsData(MOCKED_EVENT_DATA);
-  };
-
-  useEffect(() => {
-    fetchEventsData();
-  }, []);
-
+const EventList = ({ eventsData = [] }) => {
   return (
     <Grid container spacing={3}>
       {eventsData.map((event) => (

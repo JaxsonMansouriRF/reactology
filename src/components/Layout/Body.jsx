@@ -1,13 +1,13 @@
 import React from 'react';
 import { Box, Container, Paper } from '@mui/material';
+import { useThemeContext } from '../../utils/Context/ThemeContext.jsx';
 
 const DashboardBody = ({
   children,
-  PRIMARY_COLOR = '#111827', // background or main area color
-  BACKGROUND_COLOR = '#F9FAFB', // paper/background color
-  TEXT_COLOR = '#111827',
   fullHeight = true, // optionally make it fill remaining screen height
 }) => {
+  const { theme, themeMode, toggleTheme } = useThemeContext();
+  const { TEXT_COLOR, BACKGROUND_COLOR } = theme;
   return (
     <Box
       component="main"

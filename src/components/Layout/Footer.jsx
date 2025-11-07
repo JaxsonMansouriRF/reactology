@@ -3,12 +3,12 @@ import { Box, Typography, Link, Divider, IconButton, Stack } from '@mui/material
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TwitterIcon from '@mui/icons-material/Twitter';
+import { useThemeContext } from '../../utils/Context/ThemeContext.jsx';
 
-const Footer = ({
-  PRIMARY_COLOR = '#1E1E1E',
-  ACCENT_COLOR = '#6366F1',
-  TEXT_COLOR = '#FFFFFF',
-}) => {
+const Footer = () => {
+  const { theme, themeMode, toggleTheme } = useThemeContext();
+  const { PRIMARY_COLOR, TEXT_COLOR, ACCENT_COLOR } = theme;
+
   return (
     <Box
       component="footer"
