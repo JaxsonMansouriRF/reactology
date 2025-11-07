@@ -6,19 +6,11 @@
 import React, {useEffect} from 'react';
 import {Card, CardContent, Grid, Typography} from "@mui/material";
 
-const EventCard = ({ id, name, rsvp, date, location, description, myName, setMyName}) => {
-
-
-  useEffect(() => {
-    setMyName("jaxson")
-  }, [])
-
+const EventCard = ({ id, name, rsvp, date, location, description}) => {
   return (
       <Grid size={4} key={id}>
         <Card sx={{ height: 200 }}>
           <CardContent>
-            <Typography variant="h6">My Name - {myName}</Typography>
-
             <Typography variant="h6">{name}</Typography>
             <Typography variant="body2" color="textSecondary">
               {date} &mdash; {location}

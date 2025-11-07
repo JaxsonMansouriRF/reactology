@@ -24,3 +24,26 @@ export const MOCKED_EVENT_DATA = [
     rsvp: false,
   },
 ];
+
+
+export function mockFetchEvents() {
+  return new Promise((resolve) => {
+    // Simulate network delay of 1000ms
+    setTimeout(() => {
+      // Simulate success, returning our data
+      resolve({
+        ok: true,
+        json: () => Promise.resolve(MOCKED_EVENT_DATA)
+      });
+
+      // OPTIONAL: To simulate an error, uncomment the line below and comment out resolve()
+      /*
+      resolve({
+          ok: false,
+          status: 500,
+          statusText: 'Internal Server Error'
+      });
+      */
+    }, 1000);
+  });
+}
