@@ -5,12 +5,16 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import Dashboard from './pages/Dashboard';
 import { ThemeProvider } from './utils/Context/ThemeContext.jsx';
+import { Routes, Route } from 'react-router';
+import Layout from './components/Layout/Layout.jsx';
 
 function App() {
   return (
     <>
       <ThemeProvider>
-        <Dashboard />
+        <Layout>
+          <Dashboard />
+        </Layout>
       </ThemeProvider>
     </>
   );

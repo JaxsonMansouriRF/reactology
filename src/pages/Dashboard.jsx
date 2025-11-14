@@ -41,16 +41,12 @@ const Dashboard = () => {
 
   return (
     <div>
-      <Header pageName={'EventFlow Dashboard'} />
-      <Body>
-        {isError && <div>Error loading events: {isError.message}</div>}
-        {isLoading ? (
-          <div>Loading events...</div>
-        ) : (
-          <EventList eventsData={eventsData} key={'eventList'} />
-        )}
-      </Body>
-      <Footer />
+      {isError && <div>Error loading events: {isError.message}</div>}
+      {isLoading ? (
+        <div>Loading events...</div>
+      ) : (
+        <EventList eventsData={eventsData} key={'eventList'} />
+      )}
     </div>
   );
 };

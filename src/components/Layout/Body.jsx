@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Container, Paper } from '@mui/material';
 import { useThemeContext } from '../../utils/Context/ThemeContext.jsx';
 
-const DashboardBody = ({
+const Body = ({
   children,
   fullHeight = true, // optionally make it fill remaining screen height
 }) => {
@@ -48,4 +48,4 @@ const DashboardBody = ({
   );
 };
 
-export default DashboardBody;
+export default Body;
