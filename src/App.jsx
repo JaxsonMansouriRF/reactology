@@ -7,14 +7,20 @@ import Dashboard from './pages/Dashboard';
 import { ThemeProvider } from './utils/Context/ThemeContext.jsx';
 import { Routes, Route } from 'react-router';
 import Layout from './components/Layout/Layout.jsx';
+import Events from './pages/Events.jsx';
 
 function App() {
   return (
     <>
       <ThemeProvider>
-        <Layout>
-          <Dashboard />
-        </Layout>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            {/*  Child routes*/}
+            <Route path={'/dashboard'} element={<Dashboard />} />
+            <Route path={'/attendees'} element={<div>Attendees</div>} />
+            <Route path={'/events/:eventId'} element={<Events />} />
+          </Route>
+        </Routes>
       </ThemeProvider>
     </>
   );

@@ -20,6 +20,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useThemeContext } from '../../utils/Context/ThemeContext.jsx';
+import { Link } from 'react-router-dom';
 
 const Header = ({ pageName }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -67,9 +68,7 @@ const Header = ({ pageName }) => {
           {/* Middle: Navigation (Desktop Only) */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
             {navItems.map((item) => (
-              <Button key={item} sx={{ color: TEXT_COLOR, textTransform: 'none' }}>
-                {item}
-              </Button>
+              <Link to="/attendees"> {item}</Link>
             ))}
           </Box>
 
