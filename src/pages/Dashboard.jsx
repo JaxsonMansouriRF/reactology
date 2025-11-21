@@ -1,10 +1,5 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import EventList from '../components/Events/EventList.jsx';
-import EventSearchWidget from '../components/Events/EventSearchWidget.jsx';
-import LightSwitch from '../components/Misc/LightSwitch.jsx';
-import Header from '../components/Layout/Header.jsx';
-import Footer from '../components/Layout/Footer.jsx';
-import Body from '../components/Layout/Body.jsx';
 import { mockFetchEvents } from '../utils/MockedEventData.js';
 
 // Arrow function component
@@ -47,7 +42,6 @@ const Dashboard = () => {
         <div>Loading events...</div>
       ) : (
         <>
-          <EventSearchWidget />
           <EventList eventsData={eventsData} key={'eventList'} />
         </>
       )}
