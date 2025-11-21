@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import EventList from '../components/Events/EventList.jsx';
 import { mockFetchEvents } from '../utils/MockedEventData.js';
+import EventSearchWidget from '../components/Events/EventSearchWidget.jsx';
 
 // Arrow function component
 const Dashboard = () => {
@@ -42,6 +43,7 @@ const Dashboard = () => {
         <div>Loading events...</div>
       ) : (
         <>
+          <EventSearchWidget />
           <EventList eventsData={eventsData} key={'eventList'} />
         </>
       )}

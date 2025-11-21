@@ -8,7 +8,6 @@ import { ThemeProvider } from './utils/Context/ThemeContext.jsx';
 import { Routes, Route } from 'react-router';
 import Layout from './components/Layout/Layout.jsx';
 import Events from './pages/Events.jsx';
-import EventsClean from './pages/EventsClean.jsx';
 
 function App() {
   return (
