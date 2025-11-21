@@ -1,5 +1,6 @@
 import React, { Component, useEffect, useState } from 'react';
 import EventList from '../components/Events/EventList.jsx';
+import EventSearchWidget from '../components/Events/EventSearchWidget.jsx';
 import LightSwitch from '../components/Misc/LightSwitch.jsx';
 import Header from '../components/Layout/Header.jsx';
 import Footer from '../components/Layout/Footer.jsx';
@@ -45,7 +46,10 @@ const Dashboard = () => {
       {isLoading ? (
         <div>Loading events...</div>
       ) : (
-        <EventList eventsData={eventsData} key={'eventList'} />
+        <>
+          <EventSearchWidget />
+          <EventList eventsData={eventsData} key={'eventList'} />
+        </>
       )}
     </div>
   );

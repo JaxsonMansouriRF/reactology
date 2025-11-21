@@ -33,7 +33,12 @@ const Header = ({ pageName }) => {
   const handleProfileClick = (event) => setAnchorEl(event.currentTarget);
   const handleProfileClose = () => setAnchorEl(null);
 
-  const navItems = ['Overview', 'Events', 'Attendees', 'Reporting'];
+  const navItems = [
+    { label: 'Overview', path: '/dashboard' },
+    { label: 'Events', path: '/events' },
+    { label: 'Attendees', path: '/attendees' },
+    { label: 'Reporting', path: '/reporting' },
+  ];
 
   return (
     <>
@@ -68,7 +73,19 @@ const Header = ({ pageName }) => {
           {/* Middle: Navigation (Desktop Only) */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
             {navItems.map((item) => (
-              <Link to="/attendees"> {item}</Link>
+              <Link
+                key={item.label}
+                to={item.path}
+                style={{
+                  textDecoration: 'none',
+                  color: TEXT_COLOR,
+                  padding: '8px 16px',
+                  borderRadius: '8px',
+                  transition: 'background-color 0.2s',
+                }}
+              >
+                {item.label}
+              </Link>
             ))}
           </Box>
 
@@ -138,9 +155,14 @@ const Header = ({ pageName }) => {
         >
           <List>
             {navItems.map((item) => (
-              <ListItem key={item} disablePadding>
-                <ListItemButton onClick={handleMenuToggle}>
-                  <ListItemText primary={item} />
+              <ListItem key={item.label} disablePadding>
+                <ListItemButton
+                  component={Link}
+                  to={item.path}
+                  onClick={handleMenuToggle}
+                  sx={{ color: TEXT_COLOR }}
+                >
+                  <ListItemText primary={item.label} />
                 </ListItemButton>
               </ListItem>
             ))}
