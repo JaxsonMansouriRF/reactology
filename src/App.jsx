@@ -8,21 +8,24 @@ import { ThemeProvider } from './utils/Context/ThemeContext.jsx';
 import { Routes, Route } from 'react-router';
 import Layout from './components/Layout/Layout.jsx';
 import Events from './pages/Events.jsx';
-import EventsClean from './pages/EventsClean.jsx';
+import { Provider } from 'react-redux';
+import store from './redux/store.js';
 
 function App() {
   return (
     <>
-      <ThemeProvider>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            {/*  Child routes*/}
-            <Route path={'/dashboard'} element={<Dashboard />} />
-            <Route path={'/attendees'} element={<div>Attendees</div>} />
-            <Route path={'/events'} element={<Events />} />
-          </Route>
-        </Routes>
-      </ThemeProvider>
+      <Provider store={store}>
+        <ThemeProvider>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              {/*  Child routes*/}
+              <Route path={'/dashboard'} element={<Dashboard />} />
+              <Route path={'/attendees'} element={<div>Attendees</div>} />
+              <Route path={'/events'} element={<Events />} />
+            </Route>
+          </Routes>
+        </ThemeProvider>
+      </Provider>
     </>
   );
 }

@@ -1,0 +1,4 @@
+// Action types for events
+export const FETCH_EVENTS_START = 'FETCH_EVENTS_START';
+export const FETCH_EVENTS_SUCCESS = 'FETCH_EVENTS_SUCCESS';
+export const FETCH_EVENTS_ERROR = 'FETCH_EVENTS_ERROR';

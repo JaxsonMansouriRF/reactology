@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   Container,
@@ -22,202 +22,50 @@ import {
 } from '@mui/material';
 import { Search, Clear, History, Delete, Event } from '@mui/icons-material';
 import { useThemeContext } from '../utils/Context/ThemeContext.jsx';
-import { mockFetchEvents } from '../utils/MockedEventData.js';
 import EventCard from '../components/Events/EventCard.jsx';
+import useEventSearch from '../hooks/useEventSearch.js';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchEvents } from '../redux/actions.js';
+import { selectEvents, selectEventsLoading, selectEventsError } from '../redux/selectors.js';
 
-// MESSY VERSION - All logic mixed in the component
+// CLEAN VERSION - Using Redux for event data + custom hook for search
 const Events = () => {
   const { theme } = useThemeContext();
+  const dispatch = useDispatch();
 
-  // Multiple useState calls for different pieces of state
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [typeFilter, setTypeFilter] = useState('all');
-  const [sortBy, setSortBy] = useState('date');
-  const [sortOrder, setSortOrder] = useState('asc');
-  const [searchHistory, setSearchHistory] = useState([]);
-  const [showHistory, setShowHistory] = useState(false);
-  const [filteredEvents, setFilteredEvents] = useState([]);
+  // Get events data from Redux
+  const events = useSelector(selectEvents);
+  const loading = useSelector(selectEventsLoading);
+  const error = useSelector(selectEventsError);
 
-  // Load search history from localStorage on component mount
+  // All search/filter logic is still in the custom hook!
+  const {
+    searchTerm,
+    statusFilter,
+    typeFilter,
+    sortBy,
+    sortOrder,
+    searchHistory,
+    showHistory,
+    filteredEvents,
+    availableTypes,
+    hasActiveFilters,
+    updateSearchTerm,
+    updateStatusFilter,
+    updateTypeFilter,
+    updateSortBy,
+    toggleSortOrder,
+    clearAllFilters,
+    clearSearchHistory,
+    selectFromHistory,
+    removeFromHistory,
+    toggleHistoryVisibility,
+  } = useEventSearch(events);
+
+  // Fetch events from Redux when component mounts
   useEffect(() => {
-    const savedHistory = localStorage.getItem('eventSearchHistory');
-    if (savedHistory) {
-      setSearchHistory(JSON.parse(savedHistory));
-    }
-
-    const savedPreferences = localStorage.getItem('eventSearchPreferences');
-    if (savedPreferences) {
-      const prefs = JSON.parse(savedPreferences);
-      setStatusFilter(prefs.statusFilter || 'all');
-      setTypeFilter(prefs.typeFilter || 'all');
-      setSortBy(prefs.sortBy || 'date');
-      setSortOrder(prefs.sortOrder || 'asc');
-    }
-  }, []);
-
-  // Fetch events on component mount
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        setLoading(true);
-        const response = await mockFetchEvents();
-        const data = await response.json();
-        setEvents(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEvents();
-  }, []);
-
-  // Debounce search term
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
-
-  // Save search history when search term changes
-  useEffect(() => {
-    if (debouncedSearchTerm.trim() && !searchHistory.includes(debouncedSearchTerm.trim())) {
-      const newHistory = [debouncedSearchTerm.trim(), ...searchHistory.slice(0, 4)];
-      setSearchHistory(newHistory);
-      localStorage.setItem('eventSearchHistory', JSON.stringify(newHistory));
-    }
-  }, [debouncedSearchTerm, searchHistory]);
-
-  // Save preferences when filters change
-  useEffect(() => {
-    const preferences = {
-      statusFilter,
-      typeFilter,
-      sortBy,
-      sortOrder,
-    };
-    localStorage.setItem('eventSearchPreferences', JSON.stringify(preferences));
-  }, [statusFilter, typeFilter, sortBy, sortOrder]);
-
-  // Filter and sort events - complex logic mixed in component
-  useEffect(() => {
-    let filtered = [...events];
-
-    // Apply search filter
-    if (debouncedSearchTerm) {
-      filtered = filtered.filter(
-        (event) =>
-          event.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-          event.company.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-          event.location.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-          event.type.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
-      );
-    }
-
-    // Apply status filter
-    if (statusFilter !== 'all') {
-      filtered = filtered.filter((event) => event.status === statusFilter);
-    }
-
-    // Apply type filter
-    if (typeFilter !== 'all') {
-      filtered = filtered.filter((event) => event.type === typeFilter);
-    }
-
-    // Apply sorting
-    filtered.sort((a, b) => {
-      let aValue, bValue;
-
-      switch (sortBy) {
-        case 'date':
-          aValue = new Date(a.date);
-          bValue = new Date(b.date);
-          break;
-        case 'attendees':
-          aValue = a.attendees;
-          bValue = b.attendees;
-          break;
-        case 'company':
-          aValue = a.company.toLowerCase();
-          bValue = b.company.toLowerCase();
-          break;
-        case 'title':
-          aValue = a.title.toLowerCase();
-          bValue = b.title.toLowerCase();
-          break;
-        default:
-          aValue = a.date;
-          bValue = b.date;
-      }
-
-      if (sortOrder === 'asc') {
-        return aValue > bValue ? 1 : -1;
-      } else {
-        return aValue < bValue ? 1 : -1;
-      }
-    });
-
-    setFilteredEvents(filtered);
-  }, [events, debouncedSearchTerm, statusFilter, typeFilter, sortBy, sortOrder]);
-
-  // Event handlers scattered throughout component
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
-
-  const handleStatusFilterChange = (event) => {
-    setStatusFilter(event.target.value);
-  };
-
-  const handleTypeFilterChange = (event) => {
-    setTypeFilter(event.target.value);
-  };
-
-  const handleSortChange = (event) => {
-    setSortBy(event.target.value);
-  };
-
-  const handleSortOrderChange = () => {
-    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-  };
-
-  const clearAllFilters = () => {
-    setSearchTerm('');
-    setStatusFilter('all');
-    setTypeFilter('all');
-    setSortBy('date');
-    setSortOrder('asc');
-  };
-
-  const clearSearchHistory = () => {
-    setSearchHistory([]);
-    localStorage.removeItem('eventSearchHistory');
-  };
-
-  const selectFromHistory = (historyItem) => {
-    setSearchTerm(historyItem);
-    setShowHistory(false);
-  };
-
-  const removeFromHistory = (indexToRemove) => {
-    const newHistory = searchHistory.filter((_, index) => index !== indexToRemove);
-    setSearchHistory(newHistory);
-    localStorage.setItem('eventSearchHistory', JSON.stringify(newHistory));
-  };
-
-  // Get unique types for filter options - logic mixed in component
-  const uniqueTypes = useMemo(() => {
-    const types = [...new Set(events.map((event) => event.type))];
-    return types.sort();
-  }, [events]);
+    dispatch(fetchEvents());
+  }, [dispatch]);
 
   if (loading) {
     return (
@@ -269,11 +117,11 @@ const Events = () => {
             fontWeight: 300,
           }}
         >
-          Find and filter corporate events (MESSY VERSION - No Custom Hook)
+          Find and filter corporate events (CLEAN VERSION - With Custom Hook 🎉)
         </Typography>
       </Box>
 
-      {/* Search and Filters - Complex form logic mixed directly in component */}
+      {/* Search and Filters - Clean with custom hook! */}
       <Paper sx={{ p: 3, mb: 4, backgroundColor: theme.CARD_BACKGROUND }}>
         <Grid container spacing={3} alignItems="center">
           <Grid item xs={12} md={4}>
@@ -281,9 +129,9 @@ const Events = () => {
               fullWidth
               label="Search Events"
               value={searchTerm}
-              onChange={handleSearchChange}
-              onFocus={() => setShowHistory(searchHistory.length > 0)}
-              onBlur={() => setTimeout(() => setShowHistory(false), 200)}
+              onChange={(e) => updateSearchTerm(e.target.value)}
+              onFocus={() => toggleHistoryVisibility(searchHistory.length > 0)}
+              onBlur={() => setTimeout(() => toggleHistoryVisibility(false), 200)}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -292,7 +140,7 @@ const Events = () => {
                 ),
                 endAdornment: searchTerm && (
                   <InputAdornment position="end">
-                    <IconButton onClick={() => setSearchTerm('')} size="small">
+                    <IconButton onClick={() => updateSearchTerm('')} size="small">
                       <Clear />
                     </IconButton>
                   </InputAdornment>
@@ -308,7 +156,7 @@ const Events = () => {
               }}
             />
 
-            {/* Search History Dropdown - Complex UI logic */}
+            {/* Search History Dropdown */}
             {showHistory && searchHistory.length > 0 && (
               <Paper
                 sx={{
@@ -362,7 +210,7 @@ const Events = () => {
               <Select
                 value={statusFilter}
                 label="Status"
-                onChange={handleStatusFilterChange}
+                onChange={(e) => updateStatusFilter(e.target.value)}
                 sx={{ color: theme.TEXT_COLOR }}
               >
                 <MenuItem value="all">All Status</MenuItem>
@@ -379,11 +227,11 @@ const Events = () => {
               <Select
                 value={typeFilter}
                 label="Type"
-                onChange={handleTypeFilterChange}
+                onChange={(e) => updateTypeFilter(e.target.value)}
                 sx={{ color: theme.TEXT_COLOR }}
               >
                 <MenuItem value="all">All Types</MenuItem>
-                {uniqueTypes.map((type) => (
+                {availableTypes.map((type) => (
                   <MenuItem key={type} value={type}>
                     {type}
                   </MenuItem>
@@ -398,7 +246,7 @@ const Events = () => {
               <Select
                 value={sortBy}
                 label="Sort By"
-                onChange={handleSortChange}
+                onChange={(e) => updateSortBy(e.target.value)}
                 sx={{ color: theme.TEXT_COLOR }}
               >
                 <MenuItem value="date">Date</MenuItem>
@@ -413,7 +261,7 @@ const Events = () => {
             <Box sx={{ display: 'flex', gap: 1 }}>
               <Button
                 variant="outlined"
-                onClick={handleSortOrderChange}
+                onClick={toggleSortOrder}
                 sx={{
                   color: theme.TEXT_COLOR,
                   borderColor: theme.SUB_TEXT_COLOR,
@@ -439,43 +287,47 @@ const Events = () => {
         </Grid>
 
         {/* Active Filters Display */}
-        <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-          {searchTerm && (
-            <Chip
-              label={`Search: "${searchTerm}"`}
-              onDelete={() => setSearchTerm('')}
-              color="primary"
-              size="small"
-            />
-          )}
-          {statusFilter !== 'all' && (
-            <Chip
-              label={`Status: ${statusFilter}`}
-              onDelete={() => setStatusFilter('all')}
-              color="secondary"
-              size="small"
-            />
-          )}
-          {typeFilter !== 'all' && (
-            <Chip
-              label={`Type: ${typeFilter}`}
-              onDelete={() => setTypeFilter('all')}
-              color="secondary"
-              size="small"
-            />
-          )}
-          {(sortBy !== 'date' || sortOrder !== 'asc') && (
-            <Chip
-              label={`Sort: ${sortBy} (${sortOrder})`}
-              onDelete={() => {
-                setSortBy('date');
-                setSortOrder('asc');
-              }}
-              color="default"
-              size="small"
-            />
-          )}
-        </Box>
+        {hasActiveFilters && (
+          <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+            {searchTerm && (
+              <Chip
+                label={`Search: "${searchTerm}"`}
+                onDelete={() => updateSearchTerm('')}
+                color="primary"
+                size="small"
+              />
+            )}
+            {statusFilter !== 'all' && (
+              <Chip
+                label={`Status: ${statusFilter}`}
+                onDelete={() => updateStatusFilter('all')}
+                color="secondary"
+                size="small"
+              />
+            )}
+            {typeFilter !== 'all' && (
+              <Chip
+                label={`Type: ${typeFilter}`}
+                onDelete={() => updateTypeFilter('all')}
+                color="secondary"
+                size="small"
+              />
+            )}
+            {(sortBy !== 'date' || sortOrder !== 'asc') && (
+              <Chip
+                label={`Sort: ${sortBy} (${sortOrder})`}
+                onDelete={() => {
+                  updateSortBy('date');
+                  if (sortOrder !== 'asc') {
+                    toggleSortOrder();
+                  }
+                }}
+                color="default"
+                size="small"
+              />
+            )}
+          </Box>
+        )}
       </Paper>
 
       {/* Results Summary */}
