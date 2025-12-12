@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   Container,
@@ -14,35 +14,33 @@ import {
 } from '@mui/material';
 import { Search, Event, Business, CalendarToday } from '@mui/icons-material';
 import { useThemeContext } from '../../utils/Context/ThemeContext.jsx';
-import { mockFetchEvents } from '../../utils/MockedEventData.js';
 import useEventSearch from '../../hooks/useEventSearch.js';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchEvents } from '../../redux/actions.js';
+import { selectEvents } from '../../redux/selectors.js';
 
-// Simple search widget demonstrating hook reusability
+// Simple search widget demonstrating hook reusability with Redux
 const EventSearchWidget = () => {
   const { theme } = useThemeContext();
-  const [events, setEvents] = useState([]);
+  const dispatch = useDispatch();
+
+  // Get events from Redux store
+  const events = useSelector(selectEvents);
 
   // Same custom hook, different UI implementation
   const { searchTerm, filteredEvents, updateSearchTerm } = useEventSearch(events);
 
+  // Fetch events from Redux if not already loaded
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await mockFetchEvents();
-        const data = await response.json();
-        setEvents(data);
-      } catch (err) {
-        console.error('Error fetching events:', err);
-      }
-    };
-
-    fetchEvents();
-  }, []);
+    if (events.length === 0) {
+      dispatch(fetchEvents());
+    }
+  }, [dispatch, events.length]);
 
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
       <Typography variant="h5" sx={{ color: theme.TEXT_COLOR, mb: 3 }}>
-        🔍 Reusable Hook Demo - Simple Search Widget
+        🔍 Redux + Hook Demo - Simple Search Widget
       </Typography>
 
       <TextField

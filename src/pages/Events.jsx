@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   Container,
@@ -22,20 +22,23 @@ import {
 } from '@mui/material';
 import { Search, Clear, History, Delete, Event } from '@mui/icons-material';
 import { useThemeContext } from '../utils/Context/ThemeContext.jsx';
-import { mockFetchEvents } from '../utils/MockedEventData.js';
 import EventCard from '../components/Events/EventCard.jsx';
 import useEventSearch from '../hooks/useEventSearch.js';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchEvents } from '../redux/actions.js';
+import { selectEvents, selectEventsLoading, selectEventsError } from '../redux/selectors.js';
 
-// CLEAN VERSION - Using custom hook
+// CLEAN VERSION - Using Redux for event data + custom hook for search
 const Events = () => {
   const { theme } = useThemeContext();
+  const dispatch = useDispatch();
 
-  // Simple state for data fetching
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // Get events data from Redux
+  const events = useSelector(selectEvents);
+  const loading = useSelector(selectEventsLoading);
+  const error = useSelector(selectEventsError);
 
-  // All search/filter logic is now in the custom hook!
+  // All search/filter logic is still in the custom hook!
   const {
     searchTerm,
     statusFilter,
@@ -59,23 +62,10 @@ const Events = () => {
     toggleHistoryVisibility,
   } = useEventSearch(events);
 
-  // Simple data fetching - only concern of this component
+  // Fetch events from Redux when component mounts
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        setLoading(true);
-        const response = await mockFetchEvents();
-        const data = await response.json();
-        setEvents(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEvents();
-  }, []);
+    dispatch(fetchEvents());
+  }, [dispatch]);
 
   if (loading) {
     return (
